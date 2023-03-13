@@ -14,10 +14,37 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $datas['products']  = Product::with('product_variant_prices')->paginate(5);
-
+        if((count($request->all()) > 0)){
+            $product = new Product();
+            if(isset($request->title)){
+                $datas['products'] =  $product->where('title',$request->title)->with('product_variant_prices')->paginate(5);
+                // return $datas['products'];
+            }
+            if(isset($request->price_from) && isset($request->price_to)){
+                $price_from = $request->price_from;
+                $price_to = $request->price_to;
+    
+                $datas['products'] = $product->whereHas('product_variant_prices', function ($query) use($price_to,$price_from) {
+                    $query->whereBetween('price',[$price_from, $price_to]);
+                })->with('product_variant_prices');
+                // return $datas['products'];
+                // return $request;
+            }
+             if(isset($request->date)){
+                $datas['products'] =  $product->whereDate('created_at',$request->date)->with('product_variant_prices')->paginate(5);
+            //    return $datas['products'];
+            }
+             if(isset($request->variant)){
+                // return $request;
+            }
+            // return $product;
+            return view('products.index',$datas);
+        }
+       
+            $datas['products']  = Product::with('product_variant_prices')->paginate(5);
+        
         // return $datas['products'];
         return view('products.index',$datas);
     }
