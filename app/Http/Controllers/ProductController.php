@@ -15,7 +15,9 @@ class ProductController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function index(Request $request)
-    {
+    {   
+        $datas['variants'] = Variant::with('productVariant')->get();
+        // return $datas['variant'] ;
         if((count($request->all()) > 0)){
             $product = new Product();
             if(isset($request->title)){
@@ -67,10 +69,37 @@ class ProductController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
-    {
+    {   
+        // return $request->product_variant[0]['value'][0];
+        $rules = [
+            'product_name'=> 'string',
+            'product_sku'=> 'string',
+            'product_description'=> 'string',
+        ];
+        $request->validate($rules);
 
+        // return $request;
+        $product = new Product();
+        $product->title = $request->product_name;
+        $product->sku = $request->product_sku;
+        $product->description = $request->product_description;
+        // return $product;
+        if($product->save()){
+            foreach($request->product_variant as $item){
+                foreach($item['value'] as $variant){
+                    $product_variant = new ProductVariant();
+                    $product_variant->variant = $variant;
+                    $product_variant->product_id = $product->id;
+                    $product_variant->variant_id = $item['option'];
+                    $product_variant->save();
+                
+            }
+        }
+            // return $product_variant;
+        // return $product->id;
+    
     }
-
+    }
 
     /**
      * Display the specified resource.
