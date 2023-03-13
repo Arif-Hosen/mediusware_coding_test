@@ -52,7 +52,7 @@
 
                     <tbody>
 
-                    <tr>
+                    {{-- <tr>
                         <td>1</td>
                         <td>T-Shirt <br> Created at : 25-Aug-2020</td>
                         <td>Quality product in low cost</td>
@@ -76,7 +76,40 @@
                                 <a href="{{ route('product.edit', 1) }}" class="btn btn-success">Edit</a>
                             </div>
                         </td>
+                    </tr> --}}
+
+                    @foreach ($products as $key => $item)
+                    <tr>
+                        <td>{{$key+1}}</td>
+                        <td>{{$item->title}}<br>Created at: {{$item->created_at}}</td>
+                        <td>Quality product in low cost</td>
+                        <td>
+                            <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+
+                                @foreach ($item->product_variant_prices as $productVariant)
+                                <dt class="col-sm-3 pb-0">
+                                    {{$productVariant->product_variant_one}}/{{$productVariant->product_variant_two}}/
+                                    {{$productVariant->product_variant_three}}
+                                </dt>
+                                
+                                <dd class="col-sm-9">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-4 pb-0">Price : {{ number_format($productVariant->price,2) }}</dt>
+                                        <dd class="col-sm-8 pb-0">InStock : {{ number_format($productVariant->stock,2) }}</dd>
+                                    </dl>
+                                </dd>
+                                
+                                @endforeach
+                            </dl>
+                            <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ route('product.edit', 1) }}" class="btn btn-success">Edit</a>
+                            </div>
+                        </td>
                     </tr>
+                    @endforeach
 
                     </tbody>
 

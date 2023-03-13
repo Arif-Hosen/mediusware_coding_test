@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+        $datas['products']  = Product::with('product_variant_prices')->get();
+
+        // return $datas['products'];
+        return view('products.index',$datas);
     }
 
     /**
