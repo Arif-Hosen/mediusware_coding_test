@@ -86,6 +86,7 @@
                         </td>
                     </tr> --}}
 
+                    @if (isset($products))
                     @foreach ($products as $key => $item)
                     <tr>
                         <td>{{$key+1}}</td>
@@ -118,6 +119,7 @@
                         </td>
                     </tr>
                     @endforeach
+                    @endif
 
                     </tbody>
 
@@ -129,10 +131,10 @@
         <div class="card-footer">
             <div class="row justify-content-between">
                 <div class="col-md-6">
-                    <p>Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total()}} out of 100</p>
+                    <p>Showing @if(isset($products)) {{  $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total()}} out of 100 @endif</p>
                 </div>
                 <div class="col-md-2">
-                    {{ $products->links() }}
+                    @if(isset($products))   {{ $products->links() }} @endif
                 </div>
             </div>
         </div>
